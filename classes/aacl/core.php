@@ -28,6 +28,11 @@ abstract class AACL_Core
     protected $_resources;
 
     /**
+     * @var string
+     */
+    protected $_super_role_name;
+
+    /**
      * Get singleton instance
      * @return AACL
      */
@@ -39,7 +44,10 @@ abstract class AACL_Core
         return self::$_instance;
     }
 
-    protected function __construct() {}
+    protected function __construct() {
+        $this->_super_role_name = Kohana::$config->load('aacl')->get('super_role');
+    }
+
     protected function __clone() {}
 
     /**
@@ -172,6 +180,11 @@ abstract class AACL_Core
     public function check(AACL_Resource $resource, $action = NULL)
 	{
         $user = $this->get_loggedin_user();
+
+        // check for super role
+        if (!empty($this->_super_role_name) && Auth_ORM::instance()->logged_in($this->_super_role_name)) {
+            return;
+        }
 
         // User is logged in, check rules
         $rules = $this->_get_rules($user);

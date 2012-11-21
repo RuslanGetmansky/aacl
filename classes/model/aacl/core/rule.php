@@ -26,7 +26,7 @@ abstract class Model_AACL_Core_Rule extends ORM_AACL
     );
 
     protected $_belongs_to = array(
-        'modsuite_role' => array(
+        'role' => array(
             'model'       => 'Model_Role',
             'foreign_key' => 'role_id',
         ),
